@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kotoba Flash — Hafal Kata Bahasa Jepang</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --paper: #faf6f0;
+    --cream: #f2ebe0;
+    --red: #c0392b;
+    --red-light: #e74c3c;
+    --gold: #c9a84c;
+    --muted: #8a7d6e;
+    --border: #d8cfc2;
+    --green: #27ae60;
+    --blue: #2980b9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 15% 20%, rgba(192,57,43,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(201,168,76,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .header-jp {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 2.6rem;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .header-sub {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .header-count {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .header-count span {
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  /* Mode tabs */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 0.5rem 1.4rem;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    border-radius: 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tab:hover { border-color: var(--red); color: var(--red); }
+  .tab.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+
+  /* Stats bar */
+  .stats {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    background: white;
+  }
+  .stat-pill .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+  }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--red); }
+  .dot-muted { background: var(--border); }
+
+  /* Filter */
+  .filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .filter-bar input {
+    flex: 1;
+    min-width: 160px;
+    padding: 0.5rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 0.5rem;
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .filter-bar input:focus { border-color: var(--red); }
+  .filter-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .filter-btn {
+    padding: 0.5rem 0.9rem;
+    border: 1.5px solid var(--border);
+    background: white;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--gold); color: #7a5c00; background: #fffbe8; }
+
+  /* =================== FLASHCARD MODE =================== */
+  #mode-flashcard { }
+
+  .card-counter {
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .card-counter strong { color: var(--ink); }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* Flip card */
+  .flip-container {
+    perspective: 1200px;
+    height: 280px;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+  }
+  .flip-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flip-card.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .card-front {
+    background: white;
+  }
+  .card-back {
+    background: var(--ink);
+    transform: rotateY(180deg);
+  }
+
+  .card-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1.2rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .card-back .card-tag { color: rgba(255,255,255,0.3); }
+
+  .card-num {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+  .card-back .card-num { color: rgba(255,255,255,0.3); }
+
+  .card-main {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-align: center;
+  }
+  .card-back .card-main {
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.02em;
+    font-weight: 600;
+  }
+  .card-hint {
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .card-back .card-hint { color: rgba(255,255,255,0.4); }
+
+  .card-tap-hint {
+    position: absolute;
+    bottom: 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--border);
+    text-transform: uppercase;
+  }
+
+  /* Card controls */
+  .card-controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .ctrl-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.4rem;
+    border: 1.5px solid var(--border);
+    border-radius: 0.6rem;
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.18s;
+  }
+  .ctrl-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
+  .ctrl-btn.know { border-color: var(--green); color: var(--green); }
+  .ctrl-btn.know:hover { background: var(--green); color: white; }
+  .ctrl-btn.dunno { border-color: var(--red); color: var(--red); }
+  .ctrl-btn.dunno:hover { background: var(--red); color: white; }
+  .ctrl-btn.nav { color: var(--muted); font-size: 1.1rem; padding: 0.6rem 1rem; }
+
+  .shuffle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 auto;
+    padding: 0.4rem 1rem;
+    background: none;
+    border: none;
+    font-size: 0.75rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s;
+  }
+  .shuffle-btn:hover { color: var(--red); }
+
+  /* =================== QUIZ MODE =================== */
+  #mode-quiz { display: none; }
+
+  .quiz-question {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  }
+  .quiz-q-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .quiz-q-word {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 2.8rem;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .quiz-opt {
+    padding: 1rem 1.2rem;
+    border: 1.5px solid var(--border);
+    border-radius: 0.75rem;
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.18s;
+    text-align: left;
+    line-height: 1.3;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); background: #f0f7ff; }
+  .quiz-opt.correct { border-color: var(--green); background: #eafaf1; color: #1a7a40; }
+  .quiz-opt.wrong { border-color: var(--red); background: #fff0ee; color: var(--red); }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-opt-hira {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.1rem;
+    display: block;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.1rem;
+  }
+  .quiz-opt-rom {
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: block;
+    letter-spacing: 0.04em;
+  }
+  .quiz-opt.correct .quiz-opt-rom,
+  .quiz-opt.wrong .quiz-opt-rom { color: inherit; opacity: 0.7; }
+
+  .quiz-feedback {
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-height: 1.5rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .quiz-feedback.right { color: var(--green); }
+  .quiz-feedback.wrong { color: var(--red); }
+
+  .quiz-score-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .score-correct { color: var(--green); font-weight: 600; }
+  .score-wrong { color: var(--red); font-weight: 600; }
+
+  /* =================== LIST MODE =================== */
+  #mode-list { display: none; }
+
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.6rem;
+  }
+  .vocab-item {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 0.65rem;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    transition: border-color 0.15s;
+    position: relative;
+  }
+  .vocab-item:hover { border-color: var(--gold); }
+  .vocab-item.known { border-left: 3px solid var(--green); }
+  .vocab-item.unknown { border-left: 3px solid var(--red-light); }
+
+  .vocab-jp {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+  .vocab-id {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .vocab-mark {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.7rem;
+    font-size: 0.7rem;
+  }
+
+  /* Done screen */
+  .done-screen {
+    text-align: center;
+    padding: 3rem 1rem;
+    display: none;
+  }
+  .done-emoji { font-size: 3rem; margin-bottom: 1rem; }
+  .done-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.8rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .done-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  .done-stats {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .done-stat { text-align: center; }
+  .done-stat-num { font-size: 2rem; font-weight: 600; }
+  .done-stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .done-stat-num.green { color: var(--green); }
+  .done-stat-num.red { color: var(--red); }
+
+  .btn-restart {
+    padding: 0.75rem 2rem;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 0.6rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-restart:hover { opacity: 0.88; }
+
+  /* Keyboard hint */
+  .kb-hints {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .kb-hint {
+    font-size: 0.68rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .kb { 
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--cream);
+    font-size: 0.65rem;
+    font-weight: 600;
+  }
+
+  .card-hiragana {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 2.6rem;
+    color: var(--ink);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+    text-align: center;
+  }
+
+  .toggle-hiragana {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto 1.2rem;
+    padding: 0.4rem 1.2rem;
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 2rem;
+    font-size: 0.78rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .toggle-hiragana:hover, .toggle-hiragana.on { border-color: var(--red); color: var(--red); background: #fff5f4; }
+  .toggle-hiragana .hira-preview { font-family: 'Shippori Mincho', serif; font-size: 1rem; }
+
+  .group-bar {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .group-btn {
+    padding: 0.42rem 1.1rem;
+    border: 1.5px solid var(--border);
+    background: white;
+    border-radius: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.18s;
+  }
+  .group-btn:hover { border-color: var(--gold); color: #7a5c00; }
+  .group-btn.active { background: var(--ink); border-color: var(--ink); color: white; }
+
+  .quiz-hiragana {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 2.2rem;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.1em;
+    min-height: 1.6rem;
+  }
+  .quiz-q-word {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .vocab-hira {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 0.82rem;
+    color: var(--red);
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 500px) {
+    .quiz-options { grid-template-columns: 1fr; }
+    .card-main { font-size: 1.8rem; }
+    .card-back .card-main { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="header-jp">言葉</div>
+    <div class="header-sub">Kotoba Jepang</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="setMode('flashcard')">🃏 Flashcard</button>
+    <button class="tab" onclick="setMode('quiz')">✏️ Kuis</button>
+    <button class="tab" onclick="setMode('list')">📋 Daftar</button>
+  </div>
+
+  <div class="group-bar">
+    <span class="filter-label">Tampilkan Kelompok:</span>
+    <button class="group-btn active" id="gbtn-all" onclick="setGroup('all')">Semua</button>
+    <button class="group-btn" id="gbtn-1" onclick="setGroup('1')">I</button>
+    <button class="group-btn" id="gbtn-2" onclick="setGroup('2')">II</button>
+    <button class="group-btn" id="gbtn-3" onclick="setGroup('3')">III</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-pill"><span class="dot dot-green"></span><span id="stat-known">0 hafal</span></div>
+    <div class="stat-pill"><span class="dot dot-red"></span><span id="stat-unknown">0 belum</span></div>
+    <div class="stat-pill"><span class="dot dot-muted"></span><span id="stat-unseen">0 belum dilihat</span></div>
+  </div>
+
+  <!-- FLASHCARD MODE -->
+  <div id="mode-flashcard">
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" id="fbtn-all" onclick="setFilter('all')">Semua</button>
+      <button class="filter-btn" id="fbtn-unknown" onclick="setFilter('unknown')">Belum Hafal</button>
+      <button class="filter-btn" id="fbtn-known" onclick="setFilter('known')">Sudah Hafal</button>
+      <input type="text" id="search-input" placeholder="Cari kata..." oninput="doSearch(this.value)">
+    </div>
+
+    <div class="card-counter">Kartu <strong id="card-cur">1</strong> dari <strong id="card-total">1</strong></div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+    <div class="flip-container" id="flip-container" onclick="flipCard()">
+      <div class="flip-card" id="flip-card">
+        <div class="card-face card-front">
+          <span class="card-tag">Hiragana · Romaji</span>
+          <span class="card-num" id="fc-num">1</span>
+          <div class="card-hiragana" id="fc-hira">—</div>
+          <div class="card-main" id="fc-jp">—</div>
+          <div class="card-hint">Klik untuk lihat arti</div>
+          <div class="card-tap-hint">↩ tap / spasi</div>
+        </div>
+        <div class="card-face card-back">
+          <span class="card-tag">Arti (Indonesia)</span>
+          <span class="card-num" id="fc-num2">1</span>
+          <div class="card-main" id="fc-id">—</div>
+          <div class="card-hint" id="fc-hint2">—</div>
+          <div class="card-tap-hint">↩ tap / spasi</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-controls">
+      <button class="ctrl-btn nav" onclick="prevCard()" title="Sebelumnya">◀</button>
+      <button class="ctrl-btn dunno" onclick="markCard(false)">✗ Belum Hafal</button>
+      <button class="ctrl-btn know" onclick="markCard(true)">✓ Sudah Hafal</button>
+      <button class="ctrl-btn nav" onclick="nextCard()" title="Berikutnya">▶</button>
+    </div>
+
+    <button class="shuffle-btn" onclick="shuffleCards()">⇌ Acak Urutan</button>
+
+    <div class="kb-hints">
+      <div class="kb-hint"><span class="kb">Space</span> balik kartu</div>
+      <div class="kb-hint"><span class="kb">←</span><span class="kb">→</span> navigasi</div>
+      <div class="kb-hint"><span class="kb">Y</span> hafal &nbsp; <span class="kb">N</span> belum hafal</div>
+    </div>
+
+    <div class="done-screen" id="done-screen">
+      <div class="done-emoji">🎉</div>
+      <div class="done-title">Selesai!</div>
+      <div class="done-sub">Kamu sudah melihat semua kartu</div>
+      <div class="done-stats">
+        <div class="done-stat"><div class="done-stat-num green" id="done-known">0</div><div class="done-stat-label">Hafal</div></div>
+        <div class="done-stat"><div class="done-stat-num red" id="done-unknown">0</div><div class="done-stat-label">Perlu Diulang</div></div>
+      </div>
+      <button class="btn-restart" onclick="restartCards()">Ulangi Lagi</button>
+    </div>
+  </div>
+
+  <!-- QUIZ MODE -->
+  <div id="mode-quiz">
+    <div class="quiz-score-bar">
+      Skor: <span class="score-correct" id="q-correct">0</span> benar &nbsp;·&nbsp; <span class="score-wrong" id="q-wrong">0</span> salah &nbsp;·&nbsp; <span id="q-total-q">0</span> soal
+    </div>
+    <div class="quiz-question">
+      <div class="quiz-q-tag" id="q-direction">Apa arti kata ini?</div>
+      <div class="quiz-hiragana" id="q-hira"></div>
+      <div class="quiz-q-word" id="q-word">—</div>
+    </div>
+    <div class="quiz-options" id="q-options"></div>
+    <div class="quiz-feedback" id="q-feedback"></div>
+    <div style="text-align:center">
+      <button class="ctrl-btn" id="q-next-btn" onclick="nextQuiz()" style="display:none">Soal Berikutnya →</button>
+    </div>
+  </div>
+
+  <!-- LIST MODE -->
+  <div id="mode-list">
+    <div class="filter-bar">
+      <input type="text" id="list-search" placeholder="Cari kata..." oninput="filterList(this.value)" style="flex:1">
+      <button class="filter-btn active" id="lbtn-all" onclick="setListFilter('all')">Semua</button>
+      <button class="filter-btn" id="lbtn-unknown" onclick="setListFilter('unknown')">Belum Hafal</button>
+      <button class="filter-btn" id="lbtn-known" onclick="setListFilter('known')">Sudah Hafal</button>
+    </div>
+    <div class="vocab-grid" id="vocab-grid"></div>
+  </div>
+
+</div>
+
+<script>
+const RAW = [
+  // KELOMPOK 1
+  ["aimasu","bertemu, berjumpa","あいます",1],
+  ["asobimasu","bermain","あそびます",1],
+  ["araimasu","mencuci (tangan)","あらいます",1],
+  ["arimasu","ada","あります",1],
+  ["arukimasu","berjalan","あるきます",1],
+  ["iimasu","berkata, mengatakan","いいます",1],
+  ["ikimasu","pergi","いきます",1],
+  ["isogimasu","terburu-buru","いそぎます",1],
+  ["irimasu","memerlukan","いります",1],
+  ["ugokimasu","bergerak","うごきます",1],
+  ["utaimasu","bernyanyi","うたいます",1],
+  ["urimasu","menjual","うります",1],
+  ["okimasu","meletakkan","おきます",1],
+  ["okurimasu","mengirim, mengantar","おくります",1],
+  ["oshimasu","menekan, mendorong","おします",1],
+  ["omoimasu","mengira, merasa","おもいます",1],
+  ["omoidashimasu","teringat","おもいだします",1],
+  ["oyogimasu","berenang","およぎます",1],
+  ["owarimasu","habis, selesai","おわります",1],
+  ["kaimasu","membeli","かいます",1],
+  ["kaeshimasu","mengembalikan","かえします",1],
+  ["kaerimasu","pulang","かえります",1],
+  ["kakarimasu","memerlukan, memakan (waktu, uang)","かかります",1],
+  ["kakimasu","menulis, menggambar, melukis","かきます",1],
+  ["kashimasu","meminjamkan","かします",1],
+  ["kachimasu","menang","かちます",1],
+  ["kaburimasu","memakai (topi)","かぶります",1],
+  ["kikimasu","mendengar, bertanya","ききます",1],
+  ["kirimasu","memotong, menggunting","きります",1],
+  ["keshimasu","mematikan, memadamkan","けします",1],
+  ["sawarimasu","menyentuh, memegang","さわります",1],
+  ["shirimasu","tahu, mengetahui","しります",1],
+  ["suimasu","merokok, menghisap","すいます",1],
+  ["sumimasu","tinggal, bermukim","すみます",1],
+  ["suwarimasu","duduk","すわります",1],
+  ["tachimasu","berdiri","たちます",1],
+  ["dashimasu","mengeluarkan, mengirim (surat), menyerahkan","だします",1],
+  ["tsukaimasu","memakai, menggunakan","つかいます",1],
+  ["tsukimasu","tiba, sampai","つきます",1],
+  ["tsukurimasu","membuat, memproduksi","つくります",1],
+  ["tsureteikimasu","pergi mengantar (orang lain)","つれていきます",1],
+  ["tetsudaimasu","membantu","てつだいます",1],
+  ["tomarimasu","menginap, bermalam","とまります",1],
+  ["torimasu","mengambil, memotret","とります",1],
+  ["naoshimasu","memperbaiki, membetulkan","なおします",1],
+  ["nakushimasu","hilang, kehilangan","なくします",1],
+  ["naraimasu","belajar","ならいます",1],
+  ["narimasu","menjadi","なります",1],
+  ["nugimasu","membuka, melepaskan","ぬぎます",1],
+  ["noborimasu","mendaki","のぼります",1],
+  ["nomimasu","minum","のみます",1],
+  ["norimasu","naik","のります",1],
+  ["hairimasu","masuk","はいります",1],
+  ["hakimasu","memakai (sepatu, celana)","はきます",1],
+  ["hatarakimasu","bekerja","はたらきます",1],
+  ["hikimasu","menarik","ひきます",1],
+  ["furimasu","turun (hujan, salju)","ふります",1],
+  ["haraimasu","membayar","はらいます",1],
+  ["hanashimasu","berbicara","はなします",1],
+  ["magarimasu","belok (kanan, kiri)","まがります",1],
+  ["machimasu","menunggu","まちます",1],
+  ["mawashimasu","memutar","まわします",1],
+  ["mochimasu","memegang, membawa, memiliki","もちます",1],
+  ["motteikimasu","pergi membawa","もっていきます",1],
+  ["moraimasu","menerima","もらいます",1],
+  ["yakunitachimasu","berguna, berfaedah, bermanfaat","やくにたちます",1],
+  ["yasumimasu","beristirahat","やすみます",1],
+  ["yobimasu","memanggil","よびます",1],
+  ["yomimasu","membaca","よみます",1],
+  ["wakarimasu","mengerti","わかります",1],
+  ["watarimasu","menyeberang","わたります",1],
+
+  // KELOMPOK 2
+  ["akemasu","membuka","あけます",2],
+  ["agemasu","memberikan","あげます",2],
+  ["atsumemasu","mengumpulkan","あつめます",2],
+  ["abimasu","mandi","あびます",2],
+  ["imasu","ada","います",2],
+  ["iremasu","memasukkan","いれます",2],
+  ["umaremasu","lahir, dilahirkan","うまれます",2],
+  ["okimasu","bangun","おきます",2],
+  ["oshiemasu","mengajar, memberitahukan (alamat)","おしえます",2],
+  ["oboemasu","mengingat, menghapal","おぼえます",2],
+  ["orimasu","turun","おります",2],
+  ["kaemasu","mengganti, menukar, mengubah","かえます",2],
+  ["kakemasu","menelepon","かけます",2],
+  ["kangaemasu","memikirkan","かんがえます",2],
+  ["kiwotsuketemasu","berhati-hati","きをつけます",2],
+  ["kimasu","memakai (pakaian)","きます",2],
+  ["kuremasu","memberi (kepada saya)","くれます",2],
+  ["shimemasu","menutup","しめます",2],
+  ["shirabemasu","memeriksa, menyelidiki","しらべます",2],
+  ["sutemasu","membuang","すてます",2],
+  ["tabemasu","makan","たべます",2],
+  ["tarimasu","cukup, mencukupi","たります",2],
+  ["tsukaremasu","capek, lelah","つかれます",2],
+  ["tsukemasu","menyalakan","つけます",2],
+  ["dekakemasu","pergi keluar, berangkat keluar","でかけます",2],
+  ["dekimasu","dapat, bisa, mampu","できます",2],
+  ["demasu","keluar","でます",2],
+  ["tomemasu","menghentikan","とめます",2],
+  ["nemasu","tidur","ねます",2],
+  ["norikaemasu","ganti kendaraan, pindah kendaraan","のりかえます",2],
+  ["hajimemasu","memulai","はじめます",2],
+  ["makemasu","kalah","まけます",2],
+  ["misemasu","memperlihatkan","みせます",2],
+  ["mimasu","melihat, menonton","みます",2],
+  ["mukaemasu","menjemput","むかえます",2],
+  ["yamemasu","berhenti, meninggalkan (perusahaan)","やめます",2],
+  ["wasuremasu","lupa","わすれます",2],
+
+  // KELOMPOK 3
+  ["annaishimasu","mengantarkan untuk melihat-lihat","あんないします",3],
+  ["untenshimasu","mengemudikan, menjalankan","うんてんします",3],
+  ["kaimonoshimasu","berbelanja","かいものします",3],
+  ["kimasu","datang","きます",3],
+  ["kekkonshimasu","menikah","けっこんします",3],
+  ["kengakushimasu","meninjau","けんがくします",3],
+  ["kenkyuushimasu","meneliti","けんきゅうします",3],
+  ["kopiishimasu","mengcopy","コピーします",3],
+  ["sanposhimasu","berjalan-jalan santai","さんぽします",3],
+  ["zangyoushimasu","lembur (kerja)","ざんぎょうします",3],
+  ["shimasu","mengerjakan, berbuat, melakukan","します",3],
+  ["shuurishimasu","memperbaiki","しゅうりします",3],
+  ["shuccoushimasu","dinas keluar kota","しゅっちょうします",3],
+  ["shokujishimasu","makan","しょくじします",3],
+  ["shinpaishimasu","khawatir, cemas","しんぱいします",3],
+  ["setsumeishimasu","menjelaskan, menerangkan","せつめいします",3],
+  ["sentakushimasu","mencuci (pakaian)","せんたくします",3],
+  ["soujishimasu","membersihkan (kamar)","そうじします",3],
+  ["tsuretekimasu","membawa, datang mengantar (orang)","つれてきます",3],
+  ["denwashimasu","menelepon","でんわします",3],
+  ["hikkoshishimasu","pindah rumah","ひっこしします",3],
+  ["benkyoushimasu","belajar","べんきょうします",3],
+  ["mottekimasu","membawa, datang membawa","もってきます",3],
+  ["yoyakushimasu","memesan","よやくします",3],
+  ["ryuugakushimasu","belajar di luar negeri","りゅうがくします",3],
+  ["renshuushimasu","berlatih","れんしゅうします",3],
+];
+
+// Deduplicate
+const VOCAB = [];
+const seen = new Set();
+RAW.forEach(([jp,id,hira,group]) => {
+  const key = jp + '|' + id;
+  if (!seen.has(key)) { seen.add(key); VOCAB.push({jp, id, hira, group, status: 'unseen'}); }
+});
+
+// State
+let deck = [...VOCAB.map((_,i) => i)];
+let cur = 0;
+let flipped = false;
+let cardFilter = 'all';
+let listFilter = 'all';
+let listSearch = '';
+let fcSearch = '';
+let showHira = false;
+let groupFilter = 'all';
+
+// Quiz state
+let qCorrect = 0, qWrong = 0, qAnswered = false;
+
+function getGroupIndices() {
+  if (groupFilter === 'all') return VOCAB.map((_,i) => i);
+  return VOCAB.map((_,i) => i).filter(i => String(VOCAB[i].group) === groupFilter);
+}
+
+function getFiltered() {
+  let indices = getGroupIndices();
+  if (cardFilter === 'known') indices = indices.filter(i => VOCAB[i].status === 'known');
+  else if (cardFilter === 'unknown') indices = indices.filter(i => VOCAB[i].status !== 'known');
+  if (fcSearch) {
+    const s = fcSearch.toLowerCase();
+    indices = indices.filter(i => VOCAB[i].jp.toLowerCase().includes(s) || VOCAB[i].id.toLowerCase().includes(s));
+  }
+  return indices;
+}
+
+function setGroup(g) {
+  groupFilter = g;
+  ['all','1','2','3'].forEach(k => {
+    document.getElementById('gbtn-'+k).classList.toggle('active', k === g);
+  });
+  updateStats();
+  initDeck();
+  renderList();
+  initQuiz();
+}
+
+function toggleHiragana() {
+  showHira = !showHira;
+  const btn = document.getElementById('toggle-hira-btn');
+  btn.classList.toggle('on', showHira);
+  btn.innerHTML = `<span class="hira-preview">あ</span> ${showHira ? 'Sembunyikan' : 'Tampilkan'} Hiragana`;
+  const hiraEl = document.getElementById('fc-hira');
+  hiraEl.classList.toggle('visible', showHira);
+}
+
+function updateStats() {
+  const pool = getGroupIndices().map(i => VOCAB[i]);
+  const known = pool.filter(v => v.status === 'known').length;
+  const unknown = pool.filter(v => v.status === 'unknown').length;
+  const unseen = pool.filter(v => v.status === 'unseen').length;
+  document.getElementById('total-count').textContent = pool.length;
+  document.getElementById('known-count').textContent = known;
+  document.getElementById('stat-known').textContent = known + ' hafal';
+  document.getElementById('stat-unknown').textContent = unknown + ' belum';
+  document.getElementById('stat-unseen').textContent = unseen + ' belum dilihat';
+}
+
+
+
+// ======== FLASHCARD ========
+function initDeck() {
+  deck = getFiltered();
+  cur = 0;
+  flipped = false;
+  document.getElementById('flip-card').classList.remove('flipped');
+  document.getElementById('done-screen').style.display = 'none';
+  document.getElementById('flip-container').style.display = 'block';
+  document.querySelectorAll('.card-controls, .shuffle-btn, .kb-hints').forEach(el => el.style.display = '');
+  renderCard();
+}
+
+function renderCard() {
+  if (deck.length === 0) { showDone(); return; }
+  const idx = deck[cur];
+  const v = VOCAB[idx];
+  document.getElementById('fc-jp').textContent = v.jp;
+  document.getElementById('fc-hira').textContent = v.hira || v.jp;
+  document.getElementById('fc-id').textContent = v.id;
+  document.getElementById('fc-num').textContent = cur + 1;
+  document.getElementById('fc-num2').textContent = cur + 1;
+  document.getElementById('fc-hint2').textContent = v.jp;
+  document.getElementById('card-cur').textContent = cur + 1;
+  document.getElementById('card-total').textContent = deck.length;
+  const pct = deck.length > 1 ? (cur / (deck.length - 1)) * 100 : 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  flipped = false;
+  document.getElementById('flip-card').classList.remove('flipped');
+}
+
+function flipCard() {
+  flipped = !flipped;
+  document.getElementById('flip-card').classList.toggle('flipped', flipped);
+}
+
+function nextCard() {
+  if (cur < deck.length - 1) { cur++; renderCard(); }
+  else showDone();
+}
+
+function prevCard() {
+  if (cur > 0) { cur--; renderCard(); }
+}
+
+function markCard(known) {
+  const idx = deck[cur];
+  VOCAB[idx].status = known ? 'known' : 'unknown';
+  updateStats();
+  renderList();
+  nextCard();
+}
+
+function shuffleCards() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  cur = 0; renderCard();
+}
+
+function showDone() {
+  document.getElementById('done-screen').style.display = 'block';
+  document.getElementById('flip-container').style.display = 'none';
+  document.querySelectorAll('.card-controls, .shuffle-btn, .kb-hints').forEach(el => el.style.display = 'none');
+  const known = VOCAB.filter(v => v.status === 'known').length;
+  const unknown = VOCAB.filter(v => v.status === 'unknown').length;
+  document.getElementById('done-known').textContent = known;
+  document.getElementById('done-unknown').textContent = unknown;
+}
+
+function restartCards() {
+  initDeck();
+}
+
+function setFilter(f) {
+  cardFilter = f;
+  ['all','unknown','known'].forEach(k => {
+    document.getElementById('fbtn-'+k).classList.toggle('active', k === f);
+  });
+  initDeck();
+}
+
+function doSearch(val) {
+  fcSearch = val;
+  initDeck();
+}
+
+
+
+// ======== QUIZ ========
+let quizPool = [];
+let quizIdx = 0;
+
+function initQuiz() {
+  quizPool = shuffle([...getGroupIndices()]);
+  quizIdx = 0; qCorrect = 0; qWrong = 0;
+  updateQuizScore();
+  renderQuiz();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function renderQuiz() {
+  if (quizIdx >= quizPool.length) {
+    document.getElementById('q-hira').textContent = '';
+    document.getElementById('q-word').textContent = '🎉 Selesai!';
+    document.getElementById('q-options').innerHTML = '';
+    document.getElementById('q-feedback').textContent = `Skor: ${qCorrect} benar dari ${qCorrect+qWrong} soal`;
+    document.getElementById('q-next-btn').textContent = 'Mulai Lagi';
+    document.getElementById('q-next-btn').style.display = 'inline-flex';
+    document.getElementById('q-next-btn').onclick = () => { initQuiz(); };
+    return;
+  }
+
+  qAnswered = false;
+  const idx = quizPool[quizIdx];
+  const correct = VOCAB[idx];
+
+  // Direction: sometimes ask for romaji→id, sometimes id→romaji+hira
+  const askId = Math.random() > 0.5; // true = show jp, ask for id meaning
+  document.getElementById('q-direction').textContent = askId ? 'Apa arti kata ini?' : 'Kotoba apa yang artinya:';
+  document.getElementById('q-word').textContent = askId ? correct.jp : correct.id;
+  const qHira = document.getElementById('q-hira');
+  qHira.textContent = askId ? (correct.hira || '') : '';
+
+  // Wrong options from same group pool
+  let wrongPool = getGroupIndices().filter(i => i !== idx).map(i => VOCAB[i]);
+  if (wrongPool.length < 3) wrongPool = VOCAB.filter((_,i) => i !== idx); // fallback to all
+  shuffle(wrongPool);
+  const wrongs = wrongPool.slice(0, 3);
+
+  const container = document.getElementById('q-options');
+  container.innerHTML = '';
+
+  if (askId) {
+    // Show Indonesian meaning options (text)
+    const opts = shuffle([...wrongs.map(v => v.id), correct.id]);
+    opts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.textContent = opt;
+      btn.onclick = () => checkAnswerText(btn, opt, correct.id, container);
+      container.appendChild(btn);
+    });
+  } else {
+    // Show hiragana + romaji options
+    const allOpts = shuffle([...wrongs.map(v => ({jp: v.jp, hira: v.hira})), {jp: correct.jp, hira: correct.hira}]);
+    allOpts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.innerHTML = `<span class="quiz-opt-hira">${opt.hira || opt.jp}</span><span class="quiz-opt-rom">${opt.jp}</span>`;
+      btn.dataset.jp = opt.jp;
+      btn.onclick = () => checkAnswerJp(btn, opt.jp, correct.jp, container, correct.hira);
+      container.appendChild(btn);
+    });
+  }
+
+  document.getElementById('q-feedback').textContent = '';
+  document.getElementById('q-feedback').className = 'quiz-feedback';
+  document.getElementById('q-next-btn').style.display = 'none';
+}
+
+function checkAnswerText(btn, chosen, correct, container) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const isCorrect = chosen === correct;
+  if (isCorrect) { btn.classList.add('correct'); qCorrect++; }
+  else {
+    btn.classList.add('wrong');
+    Array.from(container.children).forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+    qWrong++;
+  }
+  Array.from(container.children).forEach(b => b.disabled = true);
+  const fb = document.getElementById('q-feedback');
+  fb.textContent = isCorrect ? '✓ Benar!' : `✗ Salah. Jawabannya: ${correct}`;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'right' : 'wrong');
+  updateQuizScore();
+  document.getElementById('q-next-btn').style.display = 'inline-flex';
+  document.getElementById('q-next-btn').onclick = nextQuiz;
+}
+
+function checkAnswerJp(btn, chosen, correct, container, correctHira) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const isCorrect = chosen === correct;
+  if (isCorrect) { btn.classList.add('correct'); qCorrect++; }
+  else {
+    btn.classList.add('wrong');
+    Array.from(container.children).forEach(b => {
+      if (b.dataset.jp === correct) b.classList.add('correct');
+    });
+    qWrong++;
+  }
+  Array.from(container.children).forEach(b => b.disabled = true);
+  const fb = document.getElementById('q-feedback');
+  fb.textContent = isCorrect ? '✓ Benar!' : `✗ Salah. Jawabannya: ${correctHira || correct} (${correct})`;
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'right' : 'wrong');
+  updateQuizScore();
+  document.getElementById('q-next-btn').style.display = 'inline-flex';
+  document.getElementById('q-next-btn').onclick = nextQuiz;
+}
+
+function nextQuiz() {
+  quizIdx++;
+  renderQuiz();
+}
+
+function updateQuizScore() {
+  document.getElementById('q-correct').textContent = qCorrect;
+  document.getElementById('q-wrong').textContent = qWrong;
+  document.getElementById('q-total-q').textContent = qCorrect + qWrong;
+}
+
+
+
+// ======== LIST ========
+function renderList() {
+  let items = getGroupIndices().map(i => ({...VOCAB[i], i}));
+  if (listFilter === 'known') items = items.filter(v => v.status === 'known');
+  else if (listFilter === 'unknown') items = items.filter(v => v.status !== 'known');
+  if (listSearch) {
+    const s = listSearch.toLowerCase();
+    items = items.filter(v => v.jp.toLowerCase().includes(s) || v.id.toLowerCase().includes(s));
+  }
+  const grid = document.getElementById('vocab-grid');
+  grid.innerHTML = items.map(v => `
+    <div class="vocab-item ${v.status === 'known' ? 'known' : v.status === 'unknown' ? 'unknown' : ''}">
+      <div class="vocab-jp">${v.jp}</div>
+      ${v.hira ? `<div class="vocab-hira">${v.hira}</div>` : ''}
+      <div class="vocab-id">${v.id}</div>
+      <span class="vocab-mark">${v.status === 'known' ? '✓' : v.status === 'unknown' ? '✗' : ''}</span>
+    </div>
+  `).join('');
+}
+
+function filterList(val) {
+  listSearch = val;
+  renderList();
+}
+
+function setListFilter(f) {
+  listFilter = f;
+  ['all','unknown','known'].forEach(k => {
+    document.getElementById('lbtn-'+k).classList.toggle('active', k === f);
+  });
+  renderList();
+}
+
+
+
+// ======== NAVIGASI ==========
+// ======== GANTI MODE ========
+function setMode(mode) {
+  ['flashcard','quiz','list'].forEach(m => {
+    document.getElementById('mode-'+m).style.display = m === mode ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['flashcard','quiz','list'][i] === mode);
+  });
+  if (mode === 'quiz') initQuiz();
+  if (mode === 'list') renderList();
+}
+
+// ======== FUNGSI KEYBOARD ========
+document.addEventListener('keydown', e => {
+  const mode = document.getElementById('mode-flashcard').style.display !== 'none' ? 'flashcard' : 
+               document.getElementById('mode-quiz').style.display !== 'none' ? 'quiz' : 'list';
+  if (mode === 'flashcard') {
+    if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+    if (e.code === 'ArrowRight') nextCard();
+    if (e.code === 'ArrowLeft') prevCard();
+    if (e.key.toLowerCase() === 'y') markCard(true);
+    if (e.key.toLowerCase() === 'n') markCard(false);
+  }
+});
+
+
+// ======== INIT ========
+updateStats();
+initDeck();
+</script>
+</body>
+</html>
