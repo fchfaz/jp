@@ -952,8 +952,6 @@ function updateStats() {
   const known = pool.filter(v => v.status === 'known').length;
   const unknown = pool.filter(v => v.status === 'unknown').length;
   const unseen = pool.filter(v => v.status === 'unseen').length;
-  document.getElementById('total-count').textContent = pool.length;
-  document.getElementById('known-count').textContent = known;
   document.getElementById('stat-known').textContent = known + ' hafal';
   document.getElementById('stat-unknown').textContent = unknown + ' belum';
   document.getElementById('stat-unseen').textContent = unseen + ' belum dilihat';
@@ -1247,8 +1245,11 @@ document.addEventListener('keydown', e => {
 
 
 // ======== INIT ========
-updateStats();
-initDeck();
+// Pastikan DOM sudah siap sebelum inisialisasi
+document.addEventListener('DOMContentLoaded', function() {
+  updateStats();
+  initDeck();
+});
 </script>
 </body>
 </html>
