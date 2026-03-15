@@ -830,7 +830,7 @@ const RAW = [
   ["yomimasu", "membaca", "よみます", 1],
   ["wakarimasu", "mengerti", "わかります", 1],
   ["watashimasu", "memberikan", "わたします", 1],
- 
+
   // Kelompok II
   ["akemasu", "membuka", "あけます", 2],
   ["agemasu", "memberikan", "あげます", 2],
@@ -892,7 +892,7 @@ const RAW = [
   ["yaburimasu", "merusak", "やぶります", 2],
   ["yamemasu", "berhenti", "やめます", 2],
   ["wasuremasu", "lupa", "わすれます", 2],
- 
+
   // Kelompok III
   ["anteishimasu", "menstabilkan", "あんていします", 3],
   ["enteishimasu", "memperpanjang", "えんていします", 3],
@@ -942,7 +942,7 @@ const RAW = [
   ["renshuushimasu", "berlatih", "れんしゅうします", 3]
 ];
 
-// Deduplicate
+// Deduplicate - include group in key to allow same word in different groups
 const VOCAB = [];
 const seen = new Set();
 RAW.forEach(([jp,id,hira,group]) => {
